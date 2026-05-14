@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
       return res.json({ success: true, data: [], fallback: true });
     }
 
-    const reviews = (data.result.reviews || []).slice(0, 5).map(r => {
+    const reviews = (data.result.reviews || []).slice(0, 6).map(r => {
       const nameParts = r.author_name.trim().split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1][0] + '.' : '';
