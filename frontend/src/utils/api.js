@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://sanat-cicekcilik-backend.onrender.com/api',
   timeout: 10000,
 })
 
