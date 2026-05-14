@@ -1,14 +1,20 @@
 import React, { useState } from 'react'
 
-const PLACEHOLDER_COLORS = ['#e8f5e9','#fce4ec','#fff3e0','#e3f2fd','#f3e5f5','#e0f7fa']
-const PLACEHOLDER_EMOJIS = ['🌹','🌸','🌺','🌻','💐','🌷']
+const PALETTES = [
+  { bg: '#F9F0F1', accent: '#C4606A' },
+  { bg: '#F0F4F0', accent: '#3D5C3A' },
+  { bg: '#F8F4EC', accent: '#B8924A' },
+  { bg: '#F0EFF8', accent: '#5B5499' },
+  { bg: '#F8F0EC', accent: '#C4724A' },
+  { bg: '#EEF4F2', accent: '#3A7A6A' },
+]
+const EMOJIS = ['🌹','🌸','🌺','🌻','💐','🌷']
 
 export default function ProductCard({ product, onOrder, index = 0 }) {
   const [imgError, setImgError] = useState(false)
   const [hovered, setHovered] = useState(false)
-
-  const placeholderColor = PLACEHOLDER_COLORS[index % PLACEHOLDER_COLORS.length]
-  const placeholderEmoji = PLACEHOLDER_EMOJIS[index % PLACEHOLDER_EMOJIS.length]
+  const palette = PALETTES[index % PALETTES.length]
+  const emoji = EMOJIS[index % EMOJIS.length]
 
   return (
     <article
@@ -16,18 +22,24 @@ export default function ProductCard({ product, onOrder, index = 0 }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         background: 'white',
-        borderRadius: 4,
         overflow: 'hidden',
         border: '1px solid var(--border)',
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-        transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
-        boxShadow: hovered ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+        transition: 'transform 0.4s var(--ease), box-shadow 0.4s var(--ease)',
+        transform: hovered ? 'translateY(-6px)' : 'none',
+        boxShadow: hovered ? '0 20px 60px rgba(13,13,13,0.12)' : '0 2px 16px rgba(13,13,13,0.05)',
         display: 'flex',
         flexDirection: 'column',
+        cursor: 'pointer',
       }}
+      onClick={() => onOrder(product)}
     >
       {/* Image */}
-      <div style={{ position: 'relative', paddingBottom: '75%', overflow: 'hidden', background: placeholderColor }}>
+      <div style={{
+        position: 'relative',
+        paddingBottom: '110%',
+        overflow: 'hidden',
+        background: palette.bg,
+      }}>
         {product.image_url && !imgError ? (
           <img
             src={product.image_url}
@@ -36,94 +48,106 @@ export default function ProductCard({ product, onOrder, index = 0 }) {
             style={{
               position: 'absolute', inset: 0, width: '100%', height: '100%',
               objectFit: 'cover',
-              transition: 'transform 0.5s ease',
-              transform: hovered ? 'scale(1.05)' : 'scale(1)',
+              transition: 'transform 0.7s var(--ease)',
+              transform: hovered ? 'scale(1.08)' : 'scale(1)',
             }}
           />
         ) : (
           <div style={{
             position: 'absolute', inset: 0,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 52,
+            fontSize: 72,
+            animation: 'float 4s ease-in-out infinite',
           }}>
-            {placeholderEmoji}
+            {emoji}
           </div>
         )}
 
-        {/* Category badge */}
+        {/* Overlay on hover */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to top, rgba(13,13,13,0.5) 0%, transparent 60%)',
+          opacity: hovered ? 1 : 0,
+          transition: 'opacity 0.4s var(--ease)',
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+          paddingBottom: 20,
+        }}>
+          <span style={{
+            color: 'white', fontSize: 11, fontWeight: 600,
+            letterSpacing: '0.14em', textTransform: 'uppercase',
+            borderBottom: '1px solid rgba(255,255,255,0.6)',
+            paddingBottom: 2,
+            transform: hovered ? 'translateY(0)' : 'translateY(8px)',
+            transition: 'transform 0.4s var(--ease)',
+          }}>Sipariş Ver →</span>
+        </div>
+
+        {/* Category */}
         {product.category_name && (
           <div style={{
-            position: 'absolute', top: 10, left: 10,
-            background: 'rgba(250,247,242,0.92)',
-            backdropFilter: 'blur(4px)',
-            padding: '3px 10px',
-            borderRadius: 'var(--radius)',
-            fontSize: 11,
-            fontWeight: 500,
-            color: 'var(--green)',
-            letterSpacing: '0.04em',
-          }}>
-            {product.category_name}
-          </div>
+            position: 'absolute', top: 12, left: 12,
+            background: 'rgba(251,248,243,0.92)',
+            backdropFilter: 'blur(8px)',
+            padding: '4px 10px',
+            fontSize: 9, fontWeight: 600,
+            letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: 'var(--text-mid)',
+          }}>{product.category_name}</div>
         )}
 
-        {/* Stock badge */}
+        {/* Stock warning */}
         {product.stock <= 3 && (
           <div style={{
-            position: 'absolute', top: 10, right: 10,
+            position: 'absolute', top: 12, right: 12,
             background: 'var(--gold)',
-            padding: '3px 10px',
-            borderRadius: 'var(--radius)',
-            fontSize: 11, fontWeight: 500, color: 'white',
-          }}>
-            Son {product.stock} adet
-          </div>
+            padding: '4px 10px',
+            fontSize: 9, fontWeight: 600, color: 'white',
+            letterSpacing: '0.1em', textTransform: 'uppercase',
+          }}>Son {product.stock}</div>
         )}
       </div>
 
       {/* Content */}
-      <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: '20px 20px 22px', flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
         <h3 style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: 18, fontWeight: 500,
-          color: 'var(--text-dark)',
-          marginBottom: 6, lineHeight: 1.3,
-        }}>
-          {product.name}
-        </h3>
+          fontFamily: 'var(--font-display)',
+          fontSize: 18, fontWeight: 600,
+          color: 'var(--text)',
+          lineHeight: 1.25,
+          letterSpacing: '-0.01em',
+        }}>{product.name}</h3>
+
         {product.description && (
           <p style={{
-            fontSize: 13, color: 'var(--text-muted)',
-            lineHeight: 1.6, marginBottom: 12,
+            fontSize: 12, color: 'var(--text-soft)',
+            lineHeight: 1.6,
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
             flex: 1,
-          }}>
-            {product.description}
-          </p>
+          }}>{product.description}</p>
         )}
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 12, borderTop: '1px solid var(--border)' }}>
-          <span style={{ fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 600, color: 'var(--green)' }}>
-            {product.price.toLocaleString('tr-TR')} ₺
-          </span>
-          <button
-            onClick={() => onOrder(product)}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              background: 'var(--green)', color: 'white',
-              padding: '8px 16px', borderRadius: 'var(--radius)',
-              fontSize: 13, fontWeight: 500,
-              border: 'none', cursor: 'pointer',
-              transition: 'var(--transition)',
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--green-light)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'var(--green)'}
-          >
-            Sipariş Ver
-          </button>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          marginTop: 12, paddingTop: 14,
+          borderTop: '1px solid var(--border)',
+        }}>
+          <div>
+            <div style={{ fontSize: 9, color: 'var(--text-soft)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 2 }}>Fiyat</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.02em' }}>
+              {product.price.toLocaleString('tr-TR')} ₺
+            </div>
+          </div>
+          <div style={{
+            width: 40, height: 40,
+            background: hovered ? 'var(--gold)' : 'var(--cream-dark)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 18, transition: 'background 0.3s',
+          }}>
+            {hovered ? '→' : '🛒'}
+          </div>
         </div>
       </div>
     </article>
