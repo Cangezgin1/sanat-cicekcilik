@@ -107,3 +107,53 @@ input, select, textarea { font-family: var(--font); }
 .modal-header h3 { font-family: var(--font-display); font-size: 18px; font-weight: 600; }
 .modal-body { padding: 24px; }
 .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ── Mobil Uyum ── */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+
+  .admin-layout-main {
+    margin-left: 0 !important;
+    padding: 16px !important;
+    padding-top: 64px !important;
+  }
+
+  .admin-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 200;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .admin-mobile-header {
+    display: flex !important;
+  }
+
+  .table { font-size: 12px; }
+  .table td, .table th { padding: 10px 10px; }
+
+  .modal-box { max-width: 100% !important; margin: 0 8px; }
+  .modal-body { padding: 16px; }
+
+  .card { padding: 16px; }
+}
+
+@media (min-width: 769px) {
+  .admin-mobile-header { display: none !important; }
+  .admin-sidebar-overlay { display: none !important; }
+}
+
+/* Mobile header */
+.admin-mobile-header {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 56px; z-index: 150;
+  background: var(--ink);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}

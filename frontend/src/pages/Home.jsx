@@ -85,7 +85,7 @@ export default function Home({ settings }) {
                 {rating}/5 · {reviewCount}+ değerlendirme
               </span>
               <span style={{ width: 1, height: 12, background: 'rgba(255,255,255,0.2)' }} />
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>Avcılar, İstanbul</span>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>Esenyurt / Avcılar, İstanbul</span>
             </div>
 
             <h1 style={{
@@ -117,7 +117,7 @@ export default function Home({ settings }) {
               fontWeight: 300,
               animation: 'fadeUp 0.8s 0.3s ease both',
             }}>
-              Avcılar ve çevresine özenle hazırlanmış taze buket, aranjman ve saksı çiçekleri. WhatsApp ile dakikalar içinde sipariş.
+              Esenyurt, Avcılar ve çevresine özenle hazırlanmış taze buket, aranjman ve saksı çiçekleri. WhatsApp ile dakikalar içinde sipariş.
             </p>
 
             <div style={{
@@ -281,12 +281,12 @@ export default function Home({ settings }) {
             <div>
               <p className="eyebrow" style={{ color: 'var(--gold)', marginBottom: 16 }}>Hakkımızda</p>
               <h2 className="section-title" style={{ color: 'white', marginBottom: 24 }}>
-                Avcılar'ın<br />
+                Esenyurt / Avcılar'ın<br />
                 <em style={{ fontStyle: 'italic', color: 'var(--gold-light)' }}>Çiçekçisi</em>
               </h2>
               <div style={{ width: 48, height: 2, background: 'var(--gold)', marginBottom: 28 }} />
               <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.85, marginBottom: 16, fontWeight: 300 }}>
-                Sanat Çiçekçilik olarak yıllardır Avcılar ve çevresindeki ilçelere taze, kaliteli çiçekler ulaştırıyoruz. Her buket ve aranjmanı sevgiyle hazırlıyor, özel günlerinizi daha anlamlı kılmak için çalışıyoruz.
+                Sanat Çiçekçilik olarak yıllardır Esenyurt, Avcılar ve çevresindeki ilçelere taze, kaliteli çiçekler ulaştırıyoruz. Her buket ve aranjmanı sevgiyle hazırlıyor, özel günlerinizi daha anlamlı kılmak için çalışıyoruz.
               </p>
               <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.85, marginBottom: 40, fontWeight: 300 }}>
                 Yeşilkent Mahallesi'ndeki mağazamızdan ya da WhatsApp üzerinden kolayca sipariş verebilirsiniz.
