@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { getImageUrl } from '../utils/api'
 
 const PALETTES = [
   { bg: '#F9F0F1', accent: '#C4606A' },
@@ -15,6 +16,7 @@ export default function ProductCard({ product, onOrder, index = 0 }) {
   const [hovered, setHovered] = useState(false)
   const palette = PALETTES[index % PALETTES.length]
   const emoji = EMOJIS[index % EMOJIS.length]
+  const imageUrl = getImageUrl(product.image_url)
 
   return (
     <article
@@ -40,9 +42,9 @@ export default function ProductCard({ product, onOrder, index = 0 }) {
         overflow: 'hidden',
         background: palette.bg,
       }}>
-        {product.image_url && !imgError ? (
+        {imageUrl && !imgError ? (
           <img
-            src={product.image_url}
+            src={imageUrl}
             alt={product.name}
             onError={() => setImgError(true)}
             style={{
@@ -63,7 +65,7 @@ export default function ProductCard({ product, onOrder, index = 0 }) {
           </div>
         )}
 
-        {/* Overlay on hover */}
+        {/* Hover overlay */}
         <div style={{
           position: 'absolute', inset: 0,
           background: 'linear-gradient(to top, rgba(13,13,13,0.5) 0%, transparent 60%)',
@@ -77,12 +79,10 @@ export default function ProductCard({ product, onOrder, index = 0 }) {
             letterSpacing: '0.14em', textTransform: 'uppercase',
             borderBottom: '1px solid rgba(255,255,255,0.6)',
             paddingBottom: 2,
-            transform: hovered ? 'translateY(0)' : 'translateY(8px)',
-            transition: 'transform 0.4s var(--ease)',
           }}>Sipariş Ver →</span>
         </div>
 
-        {/* Category */}
+        {/* Category badge */}
         {product.category_name && (
           <div style={{
             position: 'absolute', top: 12, left: 12,
@@ -95,7 +95,7 @@ export default function ProductCard({ product, onOrder, index = 0 }) {
           }}>{product.category_name}</div>
         )}
 
-        {/* Stock warning */}
+        {/* Stock badge */}
         {product.stock <= 3 && (
           <div style={{
             position: 'absolute', top: 12, right: 12,

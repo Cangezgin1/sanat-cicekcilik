@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { getDistricts, createOrder } from '../utils/api'
 import { buildWhatsAppMessage, isWorkingHours } from '../utils/whatsapp'
+import { getImageUrl } from '../utils/api'
 
 export default function OrderModal({ product, settings, onClose }) {
   const [quantity, setQuantity] = useState(1)
@@ -129,7 +130,7 @@ export default function OrderModal({ product, settings, onClose }) {
         {/* Ürün bilgisi */}
         <div style={{ display: 'flex', gap: 14, padding: '14px 20px', background: 'var(--cream)', borderBottom: '1px solid var(--border)' }}>
           {product.image_url ? (
-            <img src={product.image_url} alt={product.name} style={{ width: 64, height: 64, objectFit: 'cover', flexShrink: 0, borderRadius: 4 }} />
+            <img src={getImageUrl(product.image_url)} alt={product.name} style={{ width: 64, height: 64, objectFit: 'cover', flexShrink: 0, borderRadius: 4 }} />
           ) : (
             <div style={{ width: 64, height: 64, background: 'var(--cream-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0, borderRadius: 4 }}>🌸</div>
           )}

@@ -1,9 +1,17 @@
 import axios from 'axios'
 
+export const BACKEND_URL = 'https://sanat-cicekcilik-backend.onrender.com'
+
 const api = axios.create({
-  baseURL: 'https://sanat-cicekcilik-backend.onrender.com/api',
+  baseURL: `${BACKEND_URL}/api`,
   timeout: 10000,
 })
+
+export const getImageUrl = (url) => {
+  if (!url) return null
+  if (url.startsWith('http')) return url
+  return `${BACKEND_URL}${url}`
+}
 
 export const getProducts = (category) =>
   api.get('/products', { params: category ? { category } : {} }).then(r => r.data)

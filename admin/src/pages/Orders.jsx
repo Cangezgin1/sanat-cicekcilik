@@ -86,7 +86,8 @@ export default function AdminOrders() {
       {loading ? (
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Yükleniyor...</div>
       ) : (
-        <div className="card" style={{ padding: 0, overflow: 'auto' }}>
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <table className="table" style={{ minWidth: 700 }}>
             <thead>
               <tr>
