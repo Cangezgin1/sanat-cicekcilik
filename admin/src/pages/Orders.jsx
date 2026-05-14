@@ -133,6 +133,7 @@ export default function AdminOrders() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
