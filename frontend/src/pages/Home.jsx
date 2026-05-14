@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getProducts, getCategories } from '../utils/api'
 import ProductCard from '../components/ProductCard'
 import OrderModal from '../components/OrderModal'
+import Reviews from '../components/Reviews'
 
 export default function Home({ settings }) {
   const [featuredProducts, setFeaturedProducts] = useState([])
@@ -327,6 +328,8 @@ export default function Home({ settings }) {
           </div>
         </div>
       </section>
+
+      <Reviews settings={settings} />
 
       {/* ══ CTA ══ */}
       <section style={{ padding: '100px 0', background: 'var(--cream-dark)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
