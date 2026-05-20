@@ -166,7 +166,7 @@ export default function AdminProducts() {
       )}
 
       {deleteId && (
-        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setDeleteId(null)}>
+        <div className="modal-overlay" >
           <div className="modal-box" style={{ maxWidth: 380 }}>
             <div className="modal-header"><h3>Ürünü Sil</h3></div>
             <div className="modal-body"><p style={{ fontSize: 14, color: 'var(--text-mid)' }}>Bu ürünü silmek istediğinize emin misiniz?</p></div>
@@ -219,7 +219,7 @@ function ProductModal({ product, categories, onSave, onClose, saving, getImageUr
   }
 
   return (
-    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+    <div className="modal-overlay" >
       <div className="modal-box">
         <div className="modal-header">
           <h3>{product ? 'Ürünü Düzenle' : 'Yeni Ürün'}</h3>

@@ -74,10 +74,21 @@ export default function AdminCategories() {
                   <td><span className="badge badge-gray">{cat.product_count} ürün</span></td>
                   <td style={{ color: 'var(--text-muted)' }}>{cat.sort_order}</td>
                   <td>
-                    <label className="toggle">
-                      <input type="checkbox" checked={!!cat.active} onChange={() => handleToggle(cat.id)} />
-                      <span className="toggle-slider" />
-                    </label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <label className="toggle" style={{ flexShrink: 0 }}>
+                        <input type="checkbox" checked={!!cat.active} onChange={() => handleToggle(cat.id)} />
+                        <span className="toggle-slider" />
+                      </label>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700,
+                        letterSpacing: '0.08em', textTransform: 'uppercase',
+                        color: cat.active ? 'var(--sage)' : 'var(--red)',
+                        background: cat.active ? 'var(--sage-bg)' : 'var(--red-bg)',
+                        padding: '3px 8px', borderRadius: 2,
+                      }}>
+                        {cat.active ? '✓ Aktif' : '✕ Pasif'}
+                      </span>
+                    </div>
                   </td>
                   <td>
                     <button className="btn btn-outline btn-sm" onClick={() => openEdit(cat)}>Düzenle</button>
@@ -90,7 +101,7 @@ export default function AdminCategories() {
       )}
 
       {modal !== null && (
-        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setModal(null)}>
+        <div className="modal-overlay" >
           <div className="modal-box" style={{ maxWidth: 400 }}>
             <div className="modal-header">
               <h3>{modal === 'add' ? 'Yeni Kategori' : 'Kategoriyi Düzenle'}</h3>
