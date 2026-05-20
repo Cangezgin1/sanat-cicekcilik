@@ -32,7 +32,7 @@ export default function Footer({ settings }) {
           {/* Links */}
           <div>
             <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 20 }}>Sayfalar</div>
-            {[['/', 'Ana Sayfa'], ['/urunler', 'Koleksiyon'], ['/#hakkimizda', 'Hakkımızda']].map(([to, label]) => (
+            {[['/', 'Ana Sayfa'], ['/urunler', 'Koleksiyon'], ['/hakkimizda', 'Hakkımızda']].map(([to, label]) => (
               <Link key={to} to={to} style={{ display: 'block', fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 12, transition: 'color 0.2s', fontWeight: 300 }}
                 onMouseEnter={e => e.currentTarget.style.color = 'white'}
                 onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}

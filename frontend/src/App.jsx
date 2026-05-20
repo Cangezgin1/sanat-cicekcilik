@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import Products from './pages/Products'
+import About from './pages/About'
 import { getPublicSettings } from './utils/api'
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home settings={settings} />} />
         <Route path="/urunler" element={<Products settings={settings} />} />
+        <Route path="/hakkimizda" element={<About settings={settings} />} />
       </Routes>
       <Footer settings={settings} />
     </BrowserRouter>

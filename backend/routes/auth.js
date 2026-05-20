@@ -55,3 +55,20 @@ router.get('/verify', authMiddleware, (req, res) => {
 });
 
 module.exports = router;
+
+// Şifre sıfırlama - güvenlik sorusuyla
+router.post('/reset-password', (req, res) => {
+  const { answer, newPassword } = req.body
+  const SECURITY_ANSWER = 'sanat'
+  
+  if (!answer || answer.toLowerCase().trim() !== SECURITY_ANSWER) {
+    return res.status(401).json({ success: false, message: 'Güvenlik sorusu cevabı hatalı' })
+  }
+  if (!newPassword || newPassword.length < 6) {
+    return res.status(400).json({ success: false, message: 'Şifre en az 6 karakter olmalı' })
+  }
+
+  const hashed = bcrypt.hashSync(newPassword, 10)
+  db.prepare('UPDATE admin_users SET password = ? WHERE id = 1').run(hashed)
+  res.json({ success: true, message: 'Şifre güncellendi' })
+})

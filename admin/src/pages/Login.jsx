@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
@@ -81,6 +81,11 @@ export default function Login() {
             <button type="submit" disabled={loading} className="btn btn-gold" style={{ width: '100%', justifyContent: 'center', padding: '13px', fontSize: 12, letterSpacing: '0.1em', marginTop: 8, opacity: loading ? 0.7 : 1 }}>
               {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
             </button>
+          <div style={{ textAlign: 'center', marginTop: 16 }}>
+              <Link to="/forgot-password" style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, letterSpacing: '0.04em' }}>
+                Şifremi unuttum →
+              </Link>
+            </div>
           </form>
         </div>
       </div>
