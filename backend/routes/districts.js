@@ -1,20 +1,19 @@
-const express = require('express');
-const router = express.Router();
-const { db } = require('../database');
-const authMiddleware = require('../middleware/auth');
+const express = require('express')
+const router = express.Router()
+const { pool } = require('../database')
+const authMiddleware = require('../middleware/auth')
 
-// Public
-router.get('/', (req, res) => {
-  const districts = db.prepare('SELECT * FROM districts ORDER BY sort_order ASC').all();
-  res.json({ success: true, data: districts });
-});
+router.get('/', async (req, res) => {
+  const result = await pool.query('SELECT * FROM districts ORDER BY sort_order ASC')
+  res.json({ success: true, data: result.rows })
+})
 
-// Admin: toggle
-router.patch('/:id/toggle', authMiddleware, (req, res) => {
-  const district = db.prepare('SELECT * FROM districts WHERE id = ?').get(req.params.id);
-  if (!district) return res.status(404).json({ success: false, message: 'İlçe bulunamadı' });
-  db.prepare('UPDATE districts SET active = ? WHERE id = ?').run(district.active ? 0 : 1, req.params.id);
-  res.json({ success: true, active: !district.active });
-});
+router.patch('/:id/toggle', authMiddleware, async (req, res) => {
+  const result = await pool.query('SELECT active FROM districts WHERE id = $1', [req.params.id])
+  if (!result.rows[0]) return res.status(404).json({ success: false, message: 'İlçe bulunamadı' })
+  const newActive = result.rows[0].active ? 0 : 1
+  await pool.query('UPDATE districts SET active = $1 WHERE id = $2', [newActive, req.params.id])
+  res.json({ success: true, active: !!newActive })
+})
 
-module.exports = router;
+module.exports = router
