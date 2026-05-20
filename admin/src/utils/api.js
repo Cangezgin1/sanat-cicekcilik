@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://sanat-cicekcilik-backend.onrender.com/api',
+  baseURL: 'https://sanat-cicekcilik-production.up.railway.app/api',
   timeout: 15000,
 })
 

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const BACKEND_URL = 'https://sanat-cicekcilik-backend.onrender.com'
+export const BACKEND_URL = 'https://sanat-cicekcilik-production.up.railway.app'
 
 const api = axios.create({
   baseURL: `${BACKEND_URL}/api`,
