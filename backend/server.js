@@ -12,6 +12,9 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:5173',
   process.env.ADMIN_URL || 'http://localhost:5174',
   'http://localhost:3000',
+  'https://sanatcicekcilik.com.tr',
+  'https://www.sanatcicekcilik.com.tr',
+  'https://panel.sanatcicekcilik.com.tr',
 ];
 
 app.set('trust proxy', 1)
