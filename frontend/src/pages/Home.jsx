@@ -4,11 +4,13 @@ import { getProducts, getCategories } from '../utils/api'
 import ProductCard from '../components/ProductCard'
 import OrderModal from '../components/OrderModal'
 import Reviews from '../components/Reviews'
+import ProductDetail from '../components/ProductDetail'
 
 export default function Home({ settings }) {
   const [featuredProducts, setFeaturedProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [detailProduct, setDetailProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const heroRef = useRef(null)
 
@@ -262,7 +264,7 @@ export default function Home({ settings }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
               {featuredProducts.map((p, i) => (
                 <div key={p.id} style={{ animation: `fadeUp 0.5s ${i * 0.07}s ease both` }}>
-                  <ProductCard product={p} onOrder={setSelectedProduct} index={i} />
+                  <ProductCard product={p} onOrder={setSelectedProduct} onDetail={setDetailProduct} index={i} />
                 </div>
               ))}
             </div>
@@ -350,6 +352,15 @@ export default function Home({ settings }) {
           </Link>
         </div>
       </section>
+
+      {detailProduct && (
+        <ProductDetail
+          product={detailProduct}
+          onOrder={setSelectedProduct}
+          onClose={() => setDetailProduct(null)}
+          index={featuredProducts.indexOf(detailProduct)}
+        />
+      )}
 
       {selectedProduct && (
         <OrderModal product={selectedProduct} settings={settings} onClose={() => setSelectedProduct(null)} />

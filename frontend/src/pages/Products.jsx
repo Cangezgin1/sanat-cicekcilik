@@ -3,18 +3,20 @@ import { useSearchParams } from 'react-router-dom'
 import { getProducts, getCategories } from '../utils/api'
 import ProductCard from '../components/ProductCard'
 import OrderModal from '../components/OrderModal'
+import ProductDetail from '../components/ProductDetail'
 
 export default function Products({ settings }) {
   const [searchParams, setSearchParams] = useSearchParams()
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [detailProduct, setDetailProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const activeCategory = searchParams.get('kategori') || 'all'
 
   useEffect(() => {
-    document.title = 'Koleksiyon | Sanat Çiçekçilik'
+    document.title = 'Ürünlerimiz | Sanat Çiçekçilik'
     getCategories().then(r => setCategories(r.data || []))
   }, [])
 
@@ -38,7 +40,7 @@ export default function Products({ settings }) {
         <div className="container" style={{ position: 'relative' }}>
           <p className="eyebrow" style={{ color: 'var(--gold)', marginBottom: 14 }}>Tüm Ürünler</p>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 700, color: 'white', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-            Koleksiyonumuz
+            Ürünlerimiz
           </h1>
         </div>
       </div>
@@ -102,12 +104,21 @@ export default function Products({ settings }) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
             {filtered.map((p, i) => (
               <div key={p.id} style={{ animation: `fadeUp 0.4s ${Math.min(i, 5) * 0.07}s ease both` }}>
-                <ProductCard product={p} onOrder={setSelectedProduct} index={i} />
+                <ProductCard product={p} onOrder={setSelectedProduct} onDetail={setDetailProduct} index={i} />
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {detailProduct && (
+        <ProductDetail
+          product={detailProduct}
+          onOrder={setSelectedProduct}
+          onClose={() => setDetailProduct(null)}
+          index={filtered.indexOf(detailProduct)}
+        />
+      )}
 
       {selectedProduct && (
         <OrderModal product={selectedProduct} settings={settings} onClose={() => setSelectedProduct(null)} />
