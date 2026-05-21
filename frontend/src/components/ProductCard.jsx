@@ -11,7 +11,7 @@ const PALETTES = [
 ]
 const EMOJIS = ['🌹','🌸','🌺','🌻','💐','🌷']
 
-export default function ProductCard({ product, onOrder, index = 0 }) {
+export default function ProductCard({ product, onOrder, onDetail, index = 0 }) {
   const [imgError, setImgError] = useState(false)
   const [hovered, setHovered] = useState(false)
   const palette = PALETTES[index % PALETTES.length]
@@ -33,7 +33,7 @@ export default function ProductCard({ product, onOrder, index = 0 }) {
         flexDirection: 'column',
         cursor: 'pointer',
       }}
-      onClick={() => onOrder(product)}
+      onClick={() => onDetail ? onDetail(product) : onOrder(product)}
     >
       {/* Image */}
       <div style={{

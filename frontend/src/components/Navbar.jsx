@@ -64,7 +64,7 @@ export default function Navbar({ settings }) {
 
           {/* Desktop Nav */}
           <nav style={{ display: 'flex', alignItems: 'center', gap: 40 }} className="desk-nav">
-            {[['/', 'Ana Sayfa'], ['/urunler', 'Koleksiyon'], ['/hakkimizda', 'Hakkımızda']].map(([to, label]) => (
+            {[['/', 'Ana Sayfa'], ['/urunler', 'Ürünler'], ['/hakkimizda', 'Hakkımızda']].map(([to, label]) => (
               <Link key={to} to={to} style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: 11,
@@ -128,7 +128,7 @@ export default function Navbar({ settings }) {
           padding: '24px 20px 32px',
           animation: 'slideDown 0.25s ease',
         }}>
-          {[['/', 'Ana Sayfa'], ['/urunler', 'Koleksiyon'], ['/hakkimizda', 'Hakkımızda']].map(([to, label]) => (
+          {[['/', 'Ana Sayfa'], ['/urunler', 'Ürünler'], ['/hakkimizda', 'Hakkımızda']].map(([to, label]) => (
             <Link key={to} to={to} style={{
               display: 'block', padding: '14px 0',
               borderBottom: '1px solid var(--border)',
