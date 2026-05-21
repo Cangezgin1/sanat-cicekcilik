@@ -5,11 +5,12 @@ export default function AdminCategories() {
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(null)
+  const [deleteId, setDeleteId] = useState(null)
   const [form, setForm] = useState({ name: '', sort_order: 0 })
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState('')
 
-  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000) }
+  const showToast = (msg, type = 'success') => { setToast({ msg, type }); setTimeout(() => setToast(''), 3000) }
 
   useEffect(() => {
     api.get('/categories/admin/all')
@@ -19,6 +20,18 @@ export default function AdminCategories() {
   const handleToggle = async (id) => {
     await api.patch(`/categories/${id}/toggle`)
     setCategories(prev => prev.map(c => c.id === id ? { ...c, active: c.active ? 0 : 1 } : c))
+  }
+
+  const handleDelete = async () => {
+    try {
+      await api.delete(`/categories/${deleteId}`)
+      setCategories(prev => prev.filter(c => c.id !== deleteId))
+      setDeleteId(null)
+      showToast('Kategori silindi ✓')
+    } catch (e) {
+      setDeleteId(null)
+      showToast(e.response?.data?.message || 'Hata oluştu', 'error')
+    }
   }
 
   const handleSave = async (e) => {
@@ -36,7 +49,7 @@ export default function AdminCategories() {
       }
       setModal(null)
     } catch (e) {
-      showToast('Hata: ' + (e.response?.data?.message || 'Bilinmeyen hata'))
+      showToast('Hata: ' + (e.response?.data?.message || 'Bilinmeyen hata'), 'error')
     } finally {
       setSaving(false)
     }
@@ -49,13 +62,13 @@ export default function AdminCategories() {
     <div style={{ animation: 'slideUp 0.3s ease' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 600, marginBottom: 2 }}>Kategoriler</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>Web sitesinde çiçekleri gruplandırmak için kullanılır</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 700, letterSpacing: '-0.02em', marginBottom: 4 }}>Kategoriler</h1>
+          <p style={{ color: 'var(--text-soft)', fontSize: 13 }}>Çiçekleri gruplandırmak için kullanılır</p>
         </div>
-        <button className="btn btn-green" onClick={openAdd}>+ Yeni Kategori</button>
+        <button className="btn btn-gold" onClick={openAdd}>+ Yeni Kategori</button>
       </div>
 
-      {loading ? <div style={{ color: 'var(--text-muted)' }}>Yükleniyor...</div> : (
+      {loading ? <div style={{ color: 'var(--text-soft)', padding: 20 }}>Yükleniyor...</div> : (
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           <table className="table">
             <thead>
@@ -72,7 +85,7 @@ export default function AdminCategories() {
                 <tr key={cat.id}>
                   <td style={{ fontWeight: 500 }}>{cat.name}</td>
                   <td><span className="badge badge-gray">{cat.product_count} ürün</span></td>
-                  <td style={{ color: 'var(--text-muted)' }}>{cat.sort_order}</td>
+                  <td style={{ color: 'var(--text-soft)' }}>{cat.sort_order}</td>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <label className="toggle" style={{ flexShrink: 0 }}>
@@ -91,21 +104,35 @@ export default function AdminCategories() {
                     </div>
                   </td>
                   <td>
-                    <button className="btn btn-outline btn-sm" onClick={() => openEdit(cat)}>Düzenle</button>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button className="btn btn-outline btn-sm" onClick={() => openEdit(cat)}>Düzenle</button>
+                      <button
+                        className="btn btn-sm"
+                        style={{ background: 'var(--red-bg)', color: 'var(--red)', border: '1px solid #f5c6c9' }}
+                        onClick={() => setDeleteId(cat.id)}
+                        title={parseInt(cat.product_count) > 0 ? 'Bu kategoride ürün var' : 'Sil'}
+                      >
+                        Sil
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          {categories.length === 0 && (
+            <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-soft)' }}>Henüz kategori eklenmemiş.</div>
+          )}
         </div>
       )}
 
+      {/* Ekle/Düzenle Modal */}
       {modal !== null && (
-        <div className="modal-overlay" >
+        <div className="modal-overlay">
           <div className="modal-box" style={{ maxWidth: 400 }}>
             <div className="modal-header">
               <h3>{modal === 'add' ? 'Yeni Kategori' : 'Kategoriyi Düzenle'}</h3>
-              <button onClick={() => setModal(null)} style={{ background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
+              <button onClick={() => setModal(null)} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-soft)', lineHeight: 1 }}>✕</button>
             </div>
             <form onSubmit={handleSave}>
               <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -120,14 +147,57 @@ export default function AdminCategories() {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-outline" onClick={() => setModal(null)}>İptal</button>
-                <button type="submit" className="btn btn-green" disabled={saving}>{saving ? 'Kaydediliyor...' : 'Kaydet'}</button>
+                <button type="submit" className="btn btn-gold" disabled={saving}>{saving ? 'Kaydediliyor...' : 'Kaydet'}</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {toast && <div style={{ position: 'fixed', bottom: 24, right: 24, background: 'var(--green)', color: 'white', padding: '12px 20px', borderRadius: 8, zIndex: 9999, fontSize: 13 }}>{toast}</div>}
+      {/* Silme Onay Modal */}
+      {deleteId && (
+        <div className="modal-overlay">
+          <div className="modal-box" style={{ maxWidth: 380 }}>
+            <div className="modal-header">
+              <h3>Kategoriyi Sil</h3>
+              <button onClick={() => setDeleteId(null)} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-soft)', lineHeight: 1 }}>✕</button>
+            </div>
+            <div className="modal-body">
+              <p style={{ fontSize: 14, color: 'var(--text-mid)', lineHeight: 1.6 }}>
+                Bu kategoriyi silmek istediğinize emin misiniz?
+              </p>
+              {categories.find(c => c.id === deleteId)?.product_count > 0 && (
+                <div style={{ marginTop: 12, padding: '10px 14px', background: 'var(--red-bg)', border: '1px solid #f5c6c9', borderRadius: 4, fontSize: 13, color: 'var(--red)' }}>
+                  ⚠️ Bu kategoride <strong>{categories.find(c => c.id === deleteId)?.product_count} ürün</strong> var. Önce ürünleri başka kategoriye taşıyın veya silin.
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-outline" onClick={() => setDeleteId(null)}>İptal</button>
+              <button
+                className="btn btn-red"
+                onClick={handleDelete}
+                disabled={categories.find(c => c.id === deleteId)?.product_count > 0}
+                style={{ opacity: categories.find(c => c.id === deleteId)?.product_count > 0 ? 0.5 : 1 }}
+              >
+                Sil
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: 24, right: 24,
+          background: toast.type === 'error' ? 'var(--red)' : 'var(--sage)',
+          color: 'white', padding: '12px 20px', borderRadius: 6,
+          zIndex: 9999, fontSize: 13, boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+          animation: 'slideUp 0.3s ease',
+        }}>
+          {toast.msg}
+        </div>
+      )}
     </div>
   )
 }
