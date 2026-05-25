@@ -126,3 +126,15 @@ router.get('/admin/stats', authMiddleware, async (req, res) => {
 })
 
 module.exports = router
+
+// Admin: sipariş sil (sadece pending veya cancelled)
+router.delete('/:id', authMiddleware, async (req, res) => {
+  const result = await pool.query('SELECT * FROM orders WHERE id = $1', [req.params.id])
+  const order = result.rows[0]
+  if (!order) return res.status(404).json({ success: false, message: 'Sipariş bulunamadı' })
+  if (order.status === 'completed') {
+    return res.status(400).json({ success: false, message: 'Teslim edilmiş siparişler silinemez' })
+  }
+  await pool.query('DELETE FROM orders WHERE id = $1', [req.params.id])
+  res.json({ success: true })
+})

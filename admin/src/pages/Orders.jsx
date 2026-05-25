@@ -14,9 +14,22 @@ export default function AdminOrders() {
   const [page, setPage] = useState(1)
   const [filters, setFilters] = useState({ status: '', district: '', date_from: '', date_to: '' })
   const [toast, setToast] = useState('')
+  const [deleteId, setDeleteId] = useState(null)
 
   const LIMIT = 20
   const showToast = (msg, type = 'success') => { setToast({ msg, type }); setTimeout(() => setToast(''), 3000) }
+
+  const handleDelete = async () => {
+    try {
+      await api.delete(`/orders/${deleteId}`)
+      setOrders(prev => prev.filter(o => o.id !== deleteId))
+      setDeleteId(null)
+      showToast('Sipariş silindi ✓')
+    } catch (e) {
+      showToast(e.response?.data?.message || 'Hata oluştu', 'error')
+      setDeleteId(null)
+    }
+  }
 
   const fetchOrders = useCallback(() => {
     setLoading(true)
@@ -118,16 +131,25 @@ export default function AdminOrders() {
                     </span>
                   </td>
                   <td>
-                    <select
-                      className="input"
-                      style={{ padding: '4px 8px', fontSize: 12, width: 'auto' }}
-                      value={o.status}
-                      onChange={e => handleStatusChange(o.id, e.target.value)}
-                    >
-                      <option value="pending">Bekliyor</option>
-                      <option value="completed">Teslim Edildi</option>
-                      <option value="cancelled">Vazgeçti</option>
-                    </select>
+                    <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                      <select
+                        className="input"
+                        style={{ padding: '4px 8px', fontSize: 12, width: 'auto' }}
+                        value={o.status}
+                        onChange={e => handleStatusChange(o.id, e.target.value)}
+                      >
+                        <option value="pending">Bekliyor</option>
+                        <option value="completed">Teslim Edildi</option>
+                        <option value="cancelled">Vazgeçti</option>
+                      </select>
+                      {o.status !== 'completed' && (
+                        <button
+                          className="btn btn-sm"
+                          style={{ background: 'var(--red-bg)', color: 'var(--red)', border: '1px solid #f5c6c9', flexShrink: 0 }}
+                          onClick={() => setDeleteId(o.id)}
+                        >Sil</button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -143,6 +165,26 @@ export default function AdminOrders() {
           <button className="btn btn-outline btn-sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>← Önceki</button>
           <span style={{ padding: '5px 12px', fontSize: 13, color: 'var(--text-muted)' }}>{page} / {totalPages}</span>
           <button className="btn btn-outline btn-sm" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>Sonraki →</button>
+        </div>
+      )}
+
+      {deleteId && (
+        <div className="modal-overlay">
+          <div className="modal-box" style={{ maxWidth: 380 }}>
+            <div className="modal-header">
+              <h3>Siparişi Sil</h3>
+              <button onClick={() => setDeleteId(null)} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-soft)' }}>✕</button>
+            </div>
+            <div className="modal-body">
+              <p style={{ fontSize: 14, color: 'var(--text-mid)', lineHeight: 1.6 }}>
+                Bu siparişi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-outline" onClick={() => setDeleteId(null)}>İptal</button>
+              <button className="btn btn-red" onClick={handleDelete}>Sil</button>
+            </div>
+          </div>
         </div>
       )}
 
