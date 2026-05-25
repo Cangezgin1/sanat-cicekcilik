@@ -57,13 +57,43 @@ router.get('/admin/all', authMiddleware, async (req, res) => {
 router.patch('/:id/status', authMiddleware, async (req, res) => {
   const { status } = req.body
   if (!['pending', 'completed', 'cancelled'].includes(status)) return res.status(400).json({ success: false, message: 'Geçersiz durum' })
+  
+  // Mevcut siparişi al
+  const orderResult = await pool.query('SELECT * FROM orders WHERE id = $1', [req.params.id])
+  const order = orderResult.rows[0]
+  if (!order) return res.status(404).json({ success: false, message: 'Sipariş bulunamadı' })
+
+  const prevStatus = order.status
+
+  // Durumu güncelle
   await pool.query('UPDATE orders SET status = $1, updated_at = NOW() WHERE id = $2', [status, req.params.id])
+
+  // Stok düşme/geri yükleme mantığı
+  if (order.product_id) {
+    if (status === 'completed' && prevStatus !== 'completed') {
+      // Teslim edildi → stok düş
+      await pool.query(
+        'UPDATE products SET stock = GREATEST(0, stock - $1) WHERE id = $2',
+        [order.quantity, order.product_id]
+      )
+    } else if (prevStatus === 'completed' && status !== 'completed') {
+      // Teslim edildi'den geri alındı → stok geri ekle
+      await pool.query(
+        'UPDATE products SET stock = stock + $1 WHERE id = $2',
+        [order.quantity, order.product_id]
+      )
+    }
+  }
+
   res.json({ success: true })
 })
 
 router.get('/admin/stats', authMiddleware, async (req, res) => {
-  const today = new Date().toISOString().split('T')[0]
-  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  // Türkiye saati (UTC+3)
+  const tzOffset = 3 * 60 * 60 * 1000
+  const now = new Date(Date.now() + tzOffset)
+  const today = now.toISOString().split('T')[0]
+  const weekAgo = new Date(Date.now() + tzOffset - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
   const [todayTotal, todayCompleted, todayCancelled, todayPending,
          weekTotal, weekCompleted, weekRevenue,
