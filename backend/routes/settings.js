@@ -30,3 +30,34 @@ router.put('/', authMiddleware, async (req, res) => {
 })
 
 module.exports = router
+
+// AI açıklama üret (Gemini - ücretsiz)
+router.post('/ai-description', authMiddleware, async (req, res) => {
+  const { productName } = req.body
+  if (!productName) return res.status(400).json({ success: false, message: 'Ürün adı gerekli' })
+
+  const apiKey = process.env.GEMINI_API_KEY
+  if (!apiKey) return res.status(500).json({ success: false, message: 'API key eksik' })
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: `Bir çiçekçi dükkanı için "${productName}" ürününün kısa, çekici ve Türkçe bir açıklamasını yaz. Maksimum 2 cümle olsun. Sadece açıklamayı yaz, başka bir şey ekleme.`
+            }]
+          }]
+        })
+      }
+    )
+    const data = await response.json()
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    res.json({ success: true, description: text.trim() })
+  } catch (e) {
+    res.status(500).json({ success: false, message: 'AI açıklama oluşturulamadı' })
+  }
+})

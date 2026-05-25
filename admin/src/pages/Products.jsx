@@ -208,21 +208,8 @@ function ProductModal({ product, categories, onSave, onClose, saving, getImageUr
     if (!form.name) { alert('Önce ürün adını girin'); return }
     setAiLoading(true)
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 200,
-          messages: [{
-            role: 'user',
-            content: `Bir çiçekçi dükkanı için "${form.name}" ürününün kısa, çekici ve Türkçe bir açıklamasını yaz. Maksimum 2 cümle olsun. Sadece açıklamayı yaz, başka bir şey ekleme.`
-          }]
-        })
-      })
-      const data = await response.json()
-      const text = data.content?.[0]?.text || ''
-      if (text) set('description', text)
+      const r = await api.post('/settings/ai-description', { productName: form.name })
+      if (r.data.description) set('description', r.data.description)
     } catch (e) {
       alert('AI açıklama oluşturulamadı')
     } finally {
