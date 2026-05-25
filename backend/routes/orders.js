@@ -3,6 +3,32 @@ const router = express.Router()
 const { pool } = require('../database')
 const authMiddleware = require('../middleware/auth')
 
+// Stok uyarısı - WhatsApp mesajı gönder
+async function checkStockAndNotify(productId) {
+  try {
+    const product = await pool.query('SELECT * FROM products WHERE id = $1', [productId])
+    if (!product.rows[0]) return
+    
+    const p = product.rows[0]
+    if (p.stock <= 3 && p.stock > 0) {
+      const settingsResult = await pool.query("SELECT value FROM settings WHERE key = 'whatsapp_number'")
+      const waNumber = settingsResult.rows[0]?.value || '905432990430'
+      
+      const msg = `⚠️ Stok Uyarısı!
+
+"${p.name}" ürününde sadece *${p.stock} adet* kaldı.
+
+Lütfen stok güncellemesi yapın.`
+      const url = `https://api.callmebot.com/whatsapp.php?phone=${waNumber}&text=${encodeURIComponent(msg)}&apikey=get_your_key`
+      
+      // CallMeBot ile WhatsApp bildirimi (ücretsiz)
+      await fetch(url).catch(() => {})
+    }
+  } catch (e) {
+    console.log('Stok uyarısı gönderilemedi:', e.message)
+  }
+}
+
 router.post('/', async (req, res) => {
   const { product_id, product_name, product_price, quantity, total_price, district_id, district_name, customer_note } = req.body
   if (!product_name || !quantity || !district_name) return res.status(400).json({ success: false, message: 'Eksik bilgi' })
@@ -76,6 +102,8 @@ router.patch('/:id/status', authMiddleware, async (req, res) => {
         'UPDATE products SET stock = GREATEST(0, stock - $1) WHERE id = $2',
         [order.quantity, order.product_id]
       )
+      // Stok uyarısı kontrol et
+      await checkStockAndNotify(order.product_id)
     } else if (prevStatus === 'completed' && status !== 'completed') {
       // Teslim edildi'den geri alındı → stok geri ekle
       await pool.query(
