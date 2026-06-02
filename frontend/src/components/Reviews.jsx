@@ -80,7 +80,7 @@ export default function Reviews({ settings }) {
         {/* Google'da gör butonu */}
         <div style={{ textAlign: 'center', marginTop: 40 }}>
           <a
-            href="https://www.google.com/maps/place/?q=place_id:ChIJISWFmrWgyhQRBWaxkwH5D5A"
+            href="https://maps.app.goo.gl/UF4eB68ZBgwTUALbA"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline-dark"

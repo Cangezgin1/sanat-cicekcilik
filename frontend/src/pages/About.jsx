@@ -147,7 +147,7 @@ export default function About({ settings }) {
               </div>
               <div style={{ marginTop: 16, display: 'flex', gap: 10 }}>
                 <a
-                  href="https://maps.google.com/?q=Yeşilkent,+Balık+Yolu+Cd.+No:70/B,+34315+Avcılar/İstanbul"
+                  href="https://maps.app.goo.gl/UF4eB68ZBgwTUALbA"
                   target="_blank" rel="noopener noreferrer"
                   className="btn-gold"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, padding: '11px 20px' }}
