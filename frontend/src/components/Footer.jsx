@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export default function Footer({ settings }) {
   const year = new Date().getFullYear()
-  const waNumber = settings?.whatsapp_number || '905432990430'
+  const waNumber = settings?.whatsapp_number || '905012764747'
   const instagram = settings?.instagram || 'sanat_cicekcilik'
 
   return (

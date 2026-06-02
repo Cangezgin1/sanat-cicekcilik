@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default function About({ settings }) {
-  const waNumber = settings?.whatsapp_number || '905432990430'
+  const waNumber = settings?.whatsapp_number || '905012764747'
   const workStart = settings?.work_start || '10:00'
   const workEnd = settings?.work_end || '23:30'
 
@@ -147,7 +147,7 @@ export default function About({ settings }) {
               </div>
               <div style={{ marginTop: 16, display: 'flex', gap: 10 }}>
                 <a
-                  href="https://maps.google.com/?q=Sanat+Çiçekçilik+Avcılar+İstanbul"
+                  href="https://maps.google.com/?q=Yeşilkent,+Balık+Yolu+Cd.+No:70/B,+34315+Avcılar/İstanbul"
                   target="_blank" rel="noopener noreferrer"
                   className="btn-gold"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, padding: '11px 20px' }}

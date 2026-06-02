@@ -56,7 +56,7 @@ export default function OrderModal({ product, settings, onClose }) {
       totalPrice,
     })
 
-    const phone = (settings?.whatsapp_number || '905432990430').replace(/\D/g, '')
+    const phone = (settings?.whatsapp_number || '905012764747').replace(/\D/g, '')
     const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
 
     // Mobil ve masaüstü için güvenilir yönlendirme

@@ -198,7 +198,6 @@ function ProductModal({ product, categories, onSave, onClose, saving, getImageUr
     sort_order: product?.sort_order || 0,
   })
   const [imageFile, setImageFile] = useState(null)
-  const [aiLoading, setAiLoading] = useState(false)
   const [imagePreview, setImagePreview] = useState(product?.image_url ? getImageUrl(product.image_url) : null)
   const fileRef = useRef()
 
@@ -266,24 +265,7 @@ function ProductModal({ product, categories, onSave, onClose, saving, getImageUr
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <label className="label" style={{ marginBottom: 0 }}>Açıklama</label>
-                <button
-                  type="button"
-                  onClick={generateDescription}
-                  disabled={aiLoading}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 4,
-                    padding: '4px 10px', fontSize: 11, fontWeight: 600,
-                    background: aiLoading ? 'var(--bg)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                    color: aiLoading ? 'var(--text-soft)' : 'white',
-                    border: 'none', borderRadius: 4, cursor: aiLoading ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.2s',
-                  }}
-                >
-                  {aiLoading ? '⏳ Yazıyor...' : '✨ AI ile Yaz'}
-                </button>
-              </div>
+              <label className="label">Açıklama</label>
               <textarea className="input" rows={2} value={form.description} onChange={e => set('description', e.target.value)} style={{ resize: 'vertical' }} />
             </div>
 

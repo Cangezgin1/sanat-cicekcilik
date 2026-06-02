@@ -104,7 +104,7 @@ export default function AdminOrders() {
           <table className="table" style={{ minWidth: 700 }}>
             <thead>
               <tr>
-                <th>#</th>
+                <th>Sıra</th>
                 <th>Tarih/Saat</th>
                 <th>Ürün</th>
                 <th>Adet</th>

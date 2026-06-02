@@ -26,7 +26,7 @@ export default function Home({ settings }) {
   const reviewCount = settings?.google_review_count || '120'
   const workStart = settings?.work_start || '10:00'
   const workEnd = settings?.work_end || '23:30'
-  const waNumber = settings?.whatsapp_number || '905432990430'
+  const waNumber = settings?.whatsapp_number || '905012764747'
 
   return (
     <main>

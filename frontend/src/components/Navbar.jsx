@@ -15,7 +15,7 @@ export default function Navbar({ settings }) {
 
   useEffect(() => setMenuOpen(false), [location])
 
-  const waNumber = settings?.whatsapp_number || '905432990430'
+  const waNumber = settings?.whatsapp_number || '905012764747'
   const transparent = isHome && !scrolled
 
   return (

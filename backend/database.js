@@ -110,7 +110,7 @@ async function seedData() {
   if (parseInt(settingsCount.rows[0].count) > 0) return
 
   const defaultSettings = [
-    ['whatsapp_number', '905432990430'],
+    ['whatsapp_number', '905012764747'],
     ['business_name', 'Sanat Çiçekçilik'],
     ['business_address', 'Yeşilkent Mh. Balıkyolu Cd. No:70/B Avcılar/İstanbul'],
     ['business_phone', '05432990430'],
