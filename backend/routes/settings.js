@@ -4,7 +4,7 @@ const { pool } = require('../database')
 const authMiddleware = require('../middleware/auth')
  
 router.get('/public', async (req, res) => {
-  const keys = ['business_name','business_address','business_phone','instagram','work_start','work_end','google_rating','google_review_count','orders_enabled','meta_description','whatsapp_number']
+  const keys = ['business_name','business_address','business_phone','instagram','work_start','work_end','google_rating','google_review_count','orders_enabled','meta_description','whatsapp_number','other_districts_enabled','open_24h']
   const result = await pool.query(`SELECT key, value FROM settings WHERE key = ANY($1)`, [keys])
   const settings = {}
   result.rows.forEach(r => { settings[r.key] = r.value })

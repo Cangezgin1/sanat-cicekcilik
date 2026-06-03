@@ -109,7 +109,7 @@ export default function AdminProducts() {
                       {p.description && <div style={{ fontSize: 11, color: 'var(--text-soft)', marginTop: 2, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.description}</div>}
                     </td>
                     <td><span className="badge badge-gray">{p.category_name || '—'}</span></td>
-                    <td style={{ fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 15 }}>{p.price.toLocaleString('tr-TR')} ₺</td>
+                    <td style={{ fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 15 }}>{Number(p.price).toLocaleString('tr-TR', {minimumFractionDigits:0,maximumFractionDigits:0})} ₺</td>
                     <td>
                       <span className={`badge ${p.stock === 0 ? 'badge-red' : p.stock <= 3 ? 'badge-gold' : 'badge-green'}`}>
                         {p.stock} adet
@@ -192,6 +192,12 @@ function ProductModal({ product, categories, onSave, onClose, saving, getImageUr
     name: product?.name || '',
     description: product?.description || '',
     price: product?.price || '',
+    price_esenyurt: product?.price_esenyurt || '',
+    price_avcilar: product?.price_avcilar || '',
+    price_beylikduzu: product?.price_beylikduzu || '',
+    price_buyukcekmece: product?.price_buyukcekmece || '',
+    price_kucukcekmece: product?.price_kucukcekmece || '',
+    price_bahcesehir: product?.price_bahcesehir || '',
     category_id: product?.category_id || '',
     stock: product?.stock ?? 0,
     active: product?.active !== undefined ? product.active : 1,
@@ -271,12 +277,39 @@ function ProductModal({ product, categories, onSave, onClose, saving, getImageUr
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div>
-                <label className="label">Fiyat (₺) *</label>
-                <input className="input" type="number" min="0" step="0.01" value={form.price} onChange={e => set('price', e.target.value)} required />
+                <label className="label">Ana Fiyat (₺) *</label>
+                <input className="input" type="number" min="0" step="1" value={form.price} onChange={e => set('price', e.target.value)} required />
+                <p style={{ fontSize: 11, color: 'var(--text-soft)', marginTop: 4 }}>İlçe fiyatı girilmezse bu fiyat kullanılır.</p>
               </div>
               <div>
                 <label className="label">Stok</label>
                 <input className="input" type="number" min="0" value={form.stock} onChange={e => set('stock', e.target.value)} />
+              </div>
+            </div>
+
+            {/* İlçe Fiyatları */}
+            <div>
+              <label className="label" style={{ marginBottom: 10 }}>İlçe Fiyatları (₺)</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                {[
+                  ['price_esenyurt', 'Esenyurt'],
+                  ['price_avcilar', 'Avcılar'],
+                  ['price_beylikduzu', 'Beylikdüzü'],
+                  ['price_buyukcekmece', 'Büyükçekmece'],
+                  ['price_kucukcekmece', 'Küçükçekmece'],
+                  ['price_bahcesehir', 'Bahçeşehir'],
+                ].map(([key, label]) => (
+                  <div key={key}>
+                    <label style={{ fontSize: 11, color: 'var(--text-soft)', display: 'block', marginBottom: 4 }}>{label}</label>
+                    <input
+                      className="input"
+                      type="number" min="0" step="1"
+                      placeholder={form.price || 'Ana fiyat'}
+                      value={form[key]}
+                      onChange={e => set(key, e.target.value)}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
 

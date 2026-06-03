@@ -80,10 +80,20 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
     try { image_url = await uploadToCloudinary(req.file.buffer, req.file.mimetype) } catch (e) {}
   }
   
+  const { price_esenyurt, price_avcilar, price_beylikduzu, price_buyukcekmece, price_kucukcekmece, price_bahcesehir } = req.body
+  const pe = price_esenyurt ? parseFloat(price_esenyurt) : parseFloat(price)
+  const pa = price_avcilar ? parseFloat(price_avcilar) : parseFloat(price)
+  const pb = price_beylikduzu ? parseFloat(price_beylikduzu) : parseFloat(price)
+  const pbk = price_buyukcekmece ? parseFloat(price_buyukcekmece) : parseFloat(price)
+  const pk = price_kucukcekmece ? parseFloat(price_kucukcekmece) : parseFloat(price)
+  const pbh = price_bahcesehir ? parseFloat(price_bahcesehir) : parseFloat(price)
+  
   const result = await pool.query(
-    `INSERT INTO products (name, description, price, category_id, image_url, stock, active, sort_order)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
-    [name, description || '', parseFloat(price), category_id || null, image_url, parseInt(stock) || 0, active === '0' ? 0 : 1, parseInt(sort_order) || 0]
+    `INSERT INTO products (name, description, price, category_id, image_url, stock, active, sort_order,
+      price_esenyurt, price_avcilar, price_beylikduzu, price_buyukcekmece, price_kucukcekmece, price_bahcesehir)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING *`,
+    [name, description || '', parseFloat(price), category_id || null, image_url, parseInt(stock) || 0, active === '0' ? 0 : 1, parseInt(sort_order) || 0,
+     pe, pa, pb, pbk, pk, pbh]
   )
   res.json({ success: true, data: result.rows[0] })
 })
@@ -100,10 +110,22 @@ router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
     try { image_url = await uploadToCloudinary(req.file.buffer, req.file.mimetype) } catch (e) {}
   }
 
+  const { price_esenyurt, price_avcilar, price_beylikduzu, price_buyukcekmece, price_kucukcekmece, price_bahcesehir } = req.body
+  const pe = price_esenyurt ? parseFloat(price_esenyurt) : parseFloat(price)
+  const pa = price_avcilar ? parseFloat(price_avcilar) : parseFloat(price)
+  const pb = price_beylikduzu ? parseFloat(price_beylikduzu) : parseFloat(price)
+  const pbk = price_buyukcekmece ? parseFloat(price_buyukcekmece) : parseFloat(price)
+  const pk = price_kucukcekmece ? parseFloat(price_kucukcekmece) : parseFloat(price)
+  const pbh = price_bahcesehir ? parseFloat(price_bahcesehir) : parseFloat(price)
+
   const result = await pool.query(
     `UPDATE products SET name=$1, description=$2, price=$3, category_id=$4, image_url=$5,
-     stock=$6, active=$7, sort_order=$8, updated_at=NOW() WHERE id=$9 RETURNING *`,
-    [name, description || '', parseFloat(price), category_id || null, image_url, parseInt(stock) || 0, active === '0' ? 0 : 1, parseInt(sort_order) || 0, req.params.id]
+     stock=$6, active=$7, sort_order=$8, updated_at=NOW(),
+     price_esenyurt=$9, price_avcilar=$10, price_beylikduzu=$11,
+     price_buyukcekmece=$12, price_kucukcekmece=$13, price_bahcesehir=$14
+     WHERE id=$15 RETURNING *`,
+    [name, description || '', parseFloat(price), category_id || null, image_url, parseInt(stock) || 0, active === '0' ? 0 : 1, parseInt(sort_order) || 0,
+     pe, pa, pb, pbk, pk, pbh, req.params.id]
   )
   res.json({ success: true, data: result.rows[0] })
 })

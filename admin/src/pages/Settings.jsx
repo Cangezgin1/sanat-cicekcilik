@@ -122,26 +122,53 @@ export default function AdminSettings() {
 
       {/* İlçeler */}
       {activeTab === 'ilçeler' && (
-        <div className="card">
-          <h3 style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Teslimat İlçeleri</h3>
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16 }}>
-            Pasif ilçelere web sitesinden sipariş verilemeye çalışılırsa müşteriye bilgi gösterilir.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {districts.map(d => (
-              <div key={d.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid var(--border)' }}>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 500 }}>{d.name}</div>
-                  <div style={{ fontSize: 12, color: d.active ? 'var(--green-muted)' : 'var(--red)', marginTop: 2 }}>
-                    {d.active ? '✓ Aktif — Sipariş alınıyor' : '✗ Pasif — Sipariş alınmıyor'}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div className="card">
+            <h3 style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Ana Teslimat İlçeleri</h3>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16 }}>
+              Pasif ilçelere sipariş alınmaz.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {districts.map(d => (
+                <div key={d.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid var(--border)' }}>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 500 }}>{d.name}</div>
+                    <div style={{ fontSize: 12, color: d.active ? 'var(--green-muted)' : 'var(--red)', marginTop: 2 }}>
+                      {d.active ? '✓ Aktif — Sipariş alınıyor' : '✗ Pasif — Sipariş alınmıyor'}
+                    </div>
                   </div>
+                  <label className="toggle">
+                    <input type="checkbox" checked={!!d.active} onChange={() => handleDistrictToggle(d.id)} />
+                    <span className="toggle-slider" />
+                  </label>
                 </div>
-                <label className="toggle">
-                  <input type="checkbox" checked={!!d.active} onChange={() => handleDistrictToggle(d.id)} />
-                  <span className="toggle-slider" />
-                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Diğer İlçeler Toggle */}
+          <div className="card">
+            <h3 style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Diğer İstanbul İlçeleri</h3>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16 }}>
+              Aktif olursa web sitesinde 6 ana ilçe dışındaki İstanbul ilçelerine de sipariş verilebilir. Fiyat değişkenlik uyarısı gösterilir.
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: settings.other_districts_enabled === '1' ? 'var(--sage-bg)' : 'var(--cream)', border: `1px solid ${settings.other_districts_enabled === '1' ? '#c8ddc4' : 'var(--border)'}`, borderRadius: 6 }}>
+              <label className="toggle">
+                <input type="checkbox" checked={settings.other_districts_enabled !== '0'} onChange={e => set('other_districts_enabled', e.target.checked ? '1' : '0')} />
+                <span className="toggle-slider" />
+              </label>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: settings.other_districts_enabled !== '0' ? 'var(--sage)' : 'var(--text)' }}>
+                  {settings.other_districts_enabled !== '0' ? '✓ Aktif — Diğer ilçeler gösteriliyor' : '✗ Pasif — Sadece 6 ana ilçe'}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--text-soft)', marginTop: 2 }}>
+                  Müşteri diğer ilçeyi seçince fiyat uyarısı gösterilir
+                </div>
               </div>
-            ))}
+            </div>
+            <button className="btn btn-green" onClick={handleSave} disabled={saving} style={{ marginTop: 16 }}>
+              {saving ? 'Kaydediliyor...' : 'Kaydet'}
+            </button>
           </div>
         </div>
       )}
@@ -153,18 +180,38 @@ export default function AdminSettings() {
           <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>
             Bu saatler dışında sipariş vermeye çalışan müşterilere uyarı gösterilir.
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 360 }}>
+
+          {/* 7/24 Açık Toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: settings.open_24h === '1' ? 'var(--sage-bg)' : 'var(--cream)', border: `1px solid ${settings.open_24h === '1' ? '#c8ddc4' : 'var(--border)'}`, borderRadius: 6 }}>
+            <label className="toggle">
+              <input type="checkbox" checked={settings.open_24h === '1'} onChange={e => set('open_24h', e.target.checked ? '1' : '0')} />
+              <span className="toggle-slider" />
+            </label>
             <div>
-              <label className="label">Açılış Saati</label>
-              <input className="input" type="time" value={settings.work_start || '10:00'} onChange={e => set('work_start', e.target.value)} />
-            </div>
-            <div>
-              <label className="label">Kapanış Saati</label>
-              <input className="input" type="time" value={settings.work_end || '23:30'} onChange={e => set('work_end', e.target.value)} />
+              <div style={{ fontSize: 14, fontWeight: 600, color: settings.open_24h === '1' ? 'var(--sage)' : 'var(--text)' }}>
+                {settings.open_24h === '1' ? '🌙 7/24 Açık' : '🕐 Belirli Saatler'}
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--text-soft)', marginTop: 2 }}>
+                {settings.open_24h === '1' ? 'Tüm saatlerde sipariş alınıyor' : 'Aşağıdaki saatler geçerli'}
+              </div>
             </div>
           </div>
+
+          {settings.open_24h !== '1' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 360 }}>
+              <div>
+                <label className="label">Açılış Saati</label>
+                <input className="input" type="time" value={settings.work_start || '10:00'} onChange={e => set('work_start', e.target.value)} />
+              </div>
+              <div>
+                <label className="label">Kapanış Saati</label>
+                <input className="input" type="time" value={settings.work_end || '23:30'} onChange={e => set('work_end', e.target.value)} />
+              </div>
+            </div>
+          )}
+
           <div style={{ background: 'var(--green-bg)', padding: '12px 16px', borderRadius: 6, fontSize: 13, color: 'var(--green)' }}>
-            💡 Şu an seçili saatler: {settings.work_start || '10:00'} — {settings.work_end || '23:30'}
+            💡 {settings.open_24h === '1' ? '7/24 sipariş alınıyor' : `Şu an seçili saatler: ${settings.work_start || '10:00'} — ${settings.work_end || '23:30'}`}
           </div>
           <button className="btn btn-green" onClick={handleSave} disabled={saving}>
             {saving ? 'Kaydediliyor...' : 'Kaydet'}

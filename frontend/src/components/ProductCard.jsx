@@ -137,7 +137,7 @@ export default function ProductCard({ product, onOrder, onDetail, index = 0 }) {
           <div>
             <div style={{ fontSize: 9, color: 'var(--text-soft)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 2 }}>Fiyat</div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.02em' }}>
-              {product.price.toLocaleString('tr-TR')} ₺
+              {Number(product.price).toLocaleString('tr-TR', {minimumFractionDigits:0,maximumFractionDigits:0})} ₺
             </div>
           </div>
           <div style={{

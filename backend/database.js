@@ -89,11 +89,55 @@ async function initDatabase() {
       );
     `)
 
+    await runMigrations()
     await seedData()
     console.log('✅ Veritabanı hazır')
   } catch (err) {
     console.error('❌ Veritabanı hatası:', err)
     throw err
+  }
+}
+
+async function runMigrations() {
+  try {
+    // İlçe fiyat kolonları
+    await pool.query(`
+      ALTER TABLE products 
+        ADD COLUMN IF NOT EXISTS price_esenyurt DECIMAL(10,2),
+        ADD COLUMN IF NOT EXISTS price_avcilar DECIMAL(10,2),
+        ADD COLUMN IF NOT EXISTS price_beylikduzu DECIMAL(10,2),
+        ADD COLUMN IF NOT EXISTS price_buyukcekmece DECIMAL(10,2),
+        ADD COLUMN IF NOT EXISTS price_kucukcekmece DECIMAL(10,2),
+        ADD COLUMN IF NOT EXISTS price_bahcesehir DECIMAL(10,2)
+    `)
+    
+    // Mevcut ürünlere ana fiyatı kopyala
+    await pool.query(`
+      UPDATE products SET
+        price_esenyurt = price,
+        price_avcilar = price,
+        price_beylikduzu = price,
+        price_buyukcekmece = price,
+        price_kucukcekmece = price,
+        price_bahcesehir = price
+      WHERE price_esenyurt IS NULL
+    `)
+    
+    // Diğer ilçeler ayarı
+    await pool.query(`
+      INSERT INTO settings (key, value) 
+      VALUES ('other_districts_enabled', '1')
+      ON CONFLICT (key) DO NOTHING
+    `)
+    
+    // Esenkent → Küçükçekmece güncelle
+    await pool.query(`
+      UPDATE districts SET name = 'Küçükçekmece' WHERE name = 'Esenkent'
+    `)
+    
+    console.log('✅ Migrations tamamlandı')
+  } catch (err) {
+    console.error('Migration hatası:', err.message)
   }
 }
 
