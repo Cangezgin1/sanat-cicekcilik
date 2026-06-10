@@ -143,7 +143,7 @@ export default function Home({ settings }) {
             }}>
               {[
                 ['500+', 'Mutlu Müşteri'],
-                ['10+', 'Yıl Deneyim'],
+                ['26+', 'Yıl Deneyim'],
                 [workStart+'–'+workEnd, 'Sipariş Saatleri'],
                 ['6', 'Teslimat İlçesi'],
               ].map(([val, label], i) => (
