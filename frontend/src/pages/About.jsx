@@ -40,7 +40,7 @@ export default function About({ settings }) {
               </h2>
               <div style={{ width: 48, height: 2, background: 'var(--gold)', marginBottom: 28 }} />
               <p style={{ fontSize: 15, color: 'var(--text-mid)', lineHeight: 1.85, marginBottom: 20, fontWeight: 300 }}>
-                Sanat Çiçekçilik, 2014 yılında Avcılar'ın kalbinde, çiçeklere duyulan derin bir sevgiden doğdu. Kurucumuz Ali Kocaburak'ın yıllarca süren ustalık deneyimi ve çiçeğe olan tutkusu, bugün binlerce müşteriyle buluşan bir markaya dönüştü.
+                Sanat Çiçekçilik, 2000 yılında Avcılar'ın kalbinde, çiçeklere duyulan derin bir sevgiden doğdu. Kurucumuz Ali Kocaburak'ın yıllarca süren ustalık deneyimi ve çiçeğe olan tutkusu, bugün binlerce müşteriyle buluşan bir markaya dönüştü.
               </p>
               <p style={{ fontSize: 15, color: 'var(--text-mid)', lineHeight: 1.85, marginBottom: 20, fontWeight: 300 }}>
                 Her buket, her aranjman ve her saksı çiçeği; sevdiklerinize ulaştırdığımız bir duygu parçasıdır. Taze çiçekleri özenle seçiyor, elleriyle titizlikle hazırlıyor ve en kısa sürede kapınıza ulaştırıyoruz.
@@ -56,7 +56,7 @@ export default function About({ settings }) {
                 { emoji: '🌹', title: 'Taze & Kaliteli', desc: 'Her sabah taze çiçekler temin ediyoruz. Solduk çiçek asla göndermiyoruz.' },
                 { emoji: '⚡', title: 'Hızlı Teslimat', desc: 'Siparişiniz onaylandıktan sonra en kısa sürede kapınızda.' },
                 { emoji: '💚', title: 'Özenli Paketleme', desc: 'Her buket ayrı bir sevgiyle paketleniyor, güvenle ulaşıyor.' },
-                { emoji: '⭐', title: '10 Yıl Deneyim', desc: '2014\'ten bu yana binlerce müşteriye hizmet verdik.' },
+                { emoji: '⭐', title: '10 Yıl Deneyim', desc: '2000\'den bu yana binlerce müşteriye hizmet verdik.' },
               ].map(item => (
                 <div key={item.title} style={{
                   padding: '28px 22px',
@@ -82,11 +82,11 @@ export default function About({ settings }) {
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 2 }}>
             {[
-              ['2014', 'Kuruluş Yılı'],
+              ['2000', 'Kuruluş Yılı'],
               ['500+', 'Mutlu Müşteri'],
               ['4.9/5', 'Google Puanı'],
               ['6', 'Teslimat İlçesi'],
-              ['10+', 'Yıl Deneyim'],
+              ['26+', 'Yıl Deneyim'],
               [workStart+'–'+workEnd, 'Sipariş Saatleri'],
             ].map(([val, label]) => (
               <div key={label} style={{
